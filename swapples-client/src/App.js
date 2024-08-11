@@ -13,8 +13,11 @@ function App() {
   });
 
   const [fruitsMatched, setFruitsMatched] = useState(0)
-
   const [flash, setFlash] = useState(false)
+  const [isGameActive, setIsGameActive] = useState(false)
+  const [gameEndTime, setGameEndTime] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [preStart, setPreStart] = useState("New")
 
   useEffect(() => {
     if (tracking.count > 0) {
@@ -29,12 +32,70 @@ function App() {
     }
   }, [tracking.count]);
 
+  useEffect(() => {
+    if (isGameActive && gameEndTime) {
+      // Set initial time left
+      setTimeLeft(Math.max(Math.floor((gameEndTime - Date.now()) / 1000), 0));
+
+      // Update the countdown every second
+      const intervalId = setInterval(() => {
+        const remainingTime = Math.max(Math.floor((gameEndTime - Date.now()) / 1000), 0);
+        setTimeLeft(remainingTime);
+
+        if (remainingTime <= 0) {
+          clearInterval(intervalId);
+          endGame();
+        }
+      }, 1000);
+
+      // Clear interval on component unmount
+      return () => clearInterval(intervalId);
+    }
+  }, [isGameActive, gameEndTime]);
+
+  const startGame = () => {
+    setPreStart("Ready")
+
+
+    setTimeout(() =>{
+      setIsGameActive(true);
+      const endTime = Date.now() + 10000; // Set the end time to 60 seconds from now
+      setGameEndTime(endTime);
+      setPreStart("Playing")
+    }, 1000)
+
+  };
+
+  const endGame = () => {
+    setIsGameActive(false);
+    setGameEndTime(null);
+    setPreStart("Done")
+  };
+
   return (
 <>
 
 <div className=" bg-blue-500">App.js</div>
 
-<Board rows={BoardOptions.rows} cols={BoardOptions.cols} setTracking={setTracking} setFruitsMatched={setFruitsMatched} />
+      <div>
+        {isGameActive ? `Time Left: ${timeLeft} seconds` : 'Game Over'}
+      </div>
+
+      <div className="relative">
+          <Board
+            rows={BoardOptions.BOARD_ROWS}
+            cols={BoardOptions.BOARD_COLUMNS}
+            setTracking={setTracking}
+            setFruitsMatched={setFruitsMatched}
+            isGameActive={isGameActive}
+          />
+        <div className="absolute text-8xl  bg-zinc-200 top-1/2 -translate-y-[50%] 0">
+          {preStart === "Ready" && "Ready?"}
+          <div onClick={startGame} className="hover:cursor-pointer hover:bg-green-400">{preStart === "New" && "Start game"}</div>
+          {preStart === "Done" && "Game Over"}
+        </div>
+      </div>
+
 
       <div>
         <div className="flex-col">
@@ -43,14 +104,22 @@ function App() {
           <div>Target {tracking.targetCell}</div>
         </div>
         <div>
-        <div className={`success-box ${flash ? 'flash' : ''}`}>Matches: {tracking.count}</div>
-        <div className={`success-box ${flash ? 'flash' : ''}`}># of fruits matched: {fruitsMatched}</div>
-        
+          <div className={`success-box ${flash ? 'flash' : ''}`}>Matches: {tracking.count}</div>
+          <div className={`success-box ${flash ? 'flash' : ''}`}># of fruits matched: {fruitsMatched}</div>
+
         </div>
       </div>
 
 
-</>
+      <div>
+        {!isGameActive && (
+          <button onClick={startGame}>Start Game</button>
+        )
+        }
+      </div>
+
+
+    </>
   );
 }
 

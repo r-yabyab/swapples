@@ -1,4 +1,5 @@
 export const BoardOptions = {
-    rows: 8,
-    cols: 8
+    BOARD_ROWS: 8,
+    BOARD_COLUMNS: 8,
+    TIMER: 10000
 }
