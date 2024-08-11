@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Cell from "./Cell";
 
+
 const generateInitialBoard = (rows, cols) => {
     const items = ["🍒", "🍇", "🍉", "🍋", "🍌"]; // Example items
 
@@ -39,7 +40,7 @@ const generateInitialBoard = (rows, cols) => {
 
 export default function Board ({ rows, cols, setTracking })  {
     const [board, setBoard] = useState(generateInitialBoard(rows, cols))
-    const [selectedCell, setSelectedCell] = useState(null);
+    const [selectedCell, setSelectedCell] = useState(null); // first clicked cell
 
     const handleCellClick = (row, col) => {
         // if specify board[row][col] in setTrackings, they will point to the same fruit for some reason
@@ -53,20 +54,32 @@ export default function Board ({ rows, cols, setTracking })  {
                 count: prevState.count
               }));
         } else {
-
-            const selectedItem = board[selectedCell.row][selectedCell.col];
-            swapCells(selectedCell, { row, col });
-            setTracking(prevState => ({
-                ...prevState,
-                targetCell: `Selected Cell @ row ${selectedCell.row}, col ${selectedCell.col} (${selectedItem}), Swapped with cell @ row ${row}, col ${col} (${item})\n`,
-                count: prevState.count + 1
-              }));
+            if (isAdjacent(selectedCell, { row, col })) {
+                const selectedItem = board[selectedCell.row][selectedCell.col];
+                swapCells(selectedCell, { row, col });
+                setTracking(prevState => ({
+                    ...prevState,
+                    targetCell: `Selected Cell @ row ${selectedCell.row}, col ${selectedCell.col} (${selectedItem}), Swapped with cell @ row ${row}, col ${col} (${item})\n`,
+                    count: prevState.count + 1
+                  }));
+                // setSelectedCell(null);
+                // setTracking(null)
+            } else {
+                console.log('cells are not adjacent')
+            }
             setSelectedCell(null);
-            // setTracking(null)
+
         }
     }
 
+    const isAdjacent = (cell1, cell2) => {
+        const rowDiff = Math.abs(cell1.row - cell2.row);
+        const colDiff = Math.abs(cell1.col - cell2.col);
+        return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
+    };
+
     const swapCells = (cell1, cell2) => {
+
         const newBoard = [...board];
         const temp = newBoard[cell1.row][cell1.col];
         newBoard[cell1.row][cell1.col] = newBoard[cell2.row][cell2.col];
@@ -104,7 +117,7 @@ export default function Board ({ rows, cols, setTracking })  {
     return (
         <>
 
-            <div className="board flex-col ">
+            <div className="board flex-col select-none ">
                 {board.map((row, rowIndex) => (
                     <div key={rowIndex} className="row flex">
                         {row.map((item, colIndex) => (

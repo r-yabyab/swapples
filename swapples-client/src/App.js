@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Board from "./components/Board";
+import { BoardOptions } from "./config/BoardOptions";
 
 function App() {
 
@@ -15,7 +16,7 @@ function App() {
 
 <div className=" bg-blue-500">App.js</div>
 
-<Board rows={8} cols={8} setTracking={setTracking} />
+<Board rows={BoardOptions.rows} cols={BoardOptions.cols} setTracking={setTracking} />
 
       <div>
         <div className="flex-col">
