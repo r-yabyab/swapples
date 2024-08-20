@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Board from "./components/Board";
 import { BoardOptions } from "./config/BoardOptions";
 import './index.css'
+import Volume from "./components/Volume";
 
 function App() {
 
@@ -18,6 +19,8 @@ function App() {
   const [gameEndTime, setGameEndTime] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
   const [preStart, setPreStart] = useState("New")
+
+  const [volume, setVolume] = useState(0.5)
 
   useEffect(() => {
     if (tracking.count > 0) {
@@ -88,6 +91,7 @@ function App() {
             setTracking={setTracking}
             setFruitsMatched={setFruitsMatched}
             isGameActive={isGameActive}
+            volume={volume}
           />
         <div className="absolute text-8xl  bg-zinc-200 top-1/2 -translate-y-[50%] 0">
           {preStart === "Ready" && "Ready?"}
@@ -116,6 +120,10 @@ function App() {
           <button onClick={startGame}>Start Game</button>
         )
         }
+      </div>
+
+      <div>
+        <Volume setVolume={setVolume} volume={volume} />
       </div>
 
 

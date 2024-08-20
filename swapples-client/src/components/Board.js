@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cell from "./Cell";
 import travisYeah from '../audio/yeah.mp3'
 import travisOnemoretime from '../audio/one-more-time.mp3'
@@ -41,13 +41,18 @@ const generateInitialBoard = (rows, cols) => {
     return board;
 };
 
-export default function Board ({ rows, cols, setTracking, setFruitsMatched, isGameActive })  {
+export default function Board ({ rows, cols, setTracking, setFruitsMatched, isGameActive, volume })  {
     const [board, setBoard] = useState(generateInitialBoard(rows, cols))
     const [selectedCell, setSelectedCell] = useState(null); // first clicked cell
     const [highlightedCells, setHighlightedCells] = useState([])
 
     const audio = new Audio(travisYeah)
     const audio2 = new Audio(travisOnemoretime)
+
+    const playAudio = (audio) => {
+        audio.volume = volume
+        audio.play();
+    }
 
     const handleCellClick = (row, col) => {
         if (!isGameActive) return;
@@ -105,7 +110,8 @@ export default function Board ({ rows, cols, setTracking, setFruitsMatched, isGa
                 ...prevState,
                 count: prevState.count + 1
               }));
-              audio.play()
+            //   audio.play()
+              playAudio(audio)
 
             removeMatches(newBoard, matchedCells);
         } else {
@@ -238,7 +244,8 @@ export default function Board ({ rows, cols, setTracking, setFruitsMatched, isGa
                     }))
 
                     removeMatches(board, matchedCells);
-                    audio2.play();
+                    // audio2.play();
+                    playAudio(audio2)
                     return; // Exit after processing one match
                 }
             }
@@ -263,6 +270,8 @@ export default function Board ({ rows, cols, setTracking, setFruitsMatched, isGa
                     </div>
                 ))}
             </div>
+
+            {/* <button onClick={() => playAudio(audio)}> Volume check</button> */}
 
         </>
     )
