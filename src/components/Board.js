@@ -41,7 +41,7 @@ const generateInitialBoard = (rows, cols) => {
     return board;
 };
 
-export default function Board ({ rows, cols, setTracking, setFruitsMatched, isGameActive, volume })  {
+export default function Board ({ rows, cols, setTracking, setFruitsMatched, gameState, volume })  {
     const [board, setBoard] = useState(generateInitialBoard(rows, cols))
     const [selectedCell, setSelectedCell] = useState(null); // first clicked cell
     const [highlightedCells, setHighlightedCells] = useState([])
@@ -55,7 +55,7 @@ export default function Board ({ rows, cols, setTracking, setFruitsMatched, isGa
     }
 
     const handleCellClick = (row, col) => {
-        if (!isGameActive) return;
+        if (gameState == 0 || gameState == 2) return;
         
         // if specify board[row][col] in setTrackings, they will point to the same fruit for some reason
         // only shows the separate fruits with const item

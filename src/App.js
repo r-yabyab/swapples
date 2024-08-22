@@ -16,7 +16,10 @@ function App() {
 
   const [fruitsMatched, setFruitsMatched] = useState(0)
   const [flash, setFlash] = useState(false)
-  const [isGameActive, setIsGameActive] = useState(false)
+      // 0 = not started, 1 = started, 2 = ended
+      // private int gameState;
+  const [gameState, setGameState] = useState(0)
+  // const [isGameActive, setIsGameActive] = useState(false)
   const [gameEndTime, setGameEndTime] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
   const [preStart, setPreStart] = useState("New")
@@ -37,7 +40,7 @@ function App() {
   }, [tracking.count]);
 
   useEffect(() => {
-    if (isGameActive && gameEndTime) {
+    if (gameState == 1 && gameEndTime) {
       // Set initial time left
       setTimeLeft(Math.max(Math.floor((gameEndTime - Date.now()) / 1000), 0));
 
@@ -55,14 +58,14 @@ function App() {
       // Clear interval on component unmount
       return () => clearInterval(intervalId);
     }
-  }, [isGameActive, gameEndTime]);
+  }, [gameState, gameEndTime]);
 
   const startGame = () => {
     setPreStart("Ready")
 
 
     setTimeout(() =>{
-      setIsGameActive(true);
+      setGameState(1);
       const endTime = Date.now() + 10000; // Set the end time to 60 seconds from now
       setGameEndTime(endTime);
       setPreStart("Playing")
@@ -71,7 +74,7 @@ function App() {
   };
 
   const endGame = () => {
-    setIsGameActive(false);
+    setGameState(2);
     setGameEndTime(null);
     setPreStart("Done")
   };
@@ -82,7 +85,7 @@ function App() {
 <div className=" bg-blue-500">App.js</div>
 
       <div>
-        {isGameActive ? `Time Left: ${timeLeft} seconds` : 'Game Over'}
+        {gameState == 1 ? `Time Left: ${timeLeft} seconds` : 'Game Over'}
       </div>
 
       <div className="relative">
@@ -91,7 +94,7 @@ function App() {
             cols={BoardOptions.BOARD_COLUMNS}
             setTracking={setTracking}
             setFruitsMatched={setFruitsMatched}
-            isGameActive={isGameActive}
+            gameState={gameState}
             volume={volume}
           />
         <div className="absolute text-8xl  bg-zinc-200 top-1/2 -translate-y-[50%] 0">
@@ -117,7 +120,7 @@ function App() {
 
 
       <div>
-        {!isGameActive && (
+        {gameState == 0 || gameState == 2 && (
           <button onClick={startGame}>Start Game</button>
         )
         }

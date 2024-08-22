@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Client } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
 
 const BROKER_URL = 'ws://localhost:8080/gs-guide-websocket'
 
@@ -12,7 +11,7 @@ export default function WebSocketClient () {
       // Create a new STOMP client
       const client = new Client({
         brokerURL: BROKER_URL, // Replace with your WebSocket endpoint
-        reconnectDelay: 5000,
+        // reconnectDelay: 5000,
         onConnect: () => {
           console.log('Connected to WebSocket');
   
@@ -43,5 +42,24 @@ export default function WebSocketClient () {
         client.deactivate();
       };
     }, []);
+
+    return (
+        <>
+            <div className='bg-blue-200'>
+                {game ? (
+                    <div>
+                        <div className='font-bold'>Websocket Data From Spring Boot:</div>
+                        <div>
+                            <h1>Game State: {game.gameState}</h1>
+                            <p>Timer: {game.timer}</p>
+                            <p>Score: {game.score}</p>
+                        </div>
+                    </div>
+                ) : (
+                    <p>Waiting for game data...</p>
+                )}
+            </div>
+        </>
+    );
 
 }
