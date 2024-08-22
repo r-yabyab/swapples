@@ -3,6 +3,7 @@ import Board from "./components/Board";
 import { BoardOptions } from "./config/BoardOptions";
 import './index.css'
 import Volume from "./components/Volume";
+import WebSocketClient from "./components/WebSocketClient";
 
 function App() {
 
@@ -126,6 +127,7 @@ function App() {
         <Volume setVolume={setVolume} volume={volume} />
       </div>
 
+<WebSocketClient />
 
     </>
   );
