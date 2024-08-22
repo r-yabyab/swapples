@@ -20,7 +20,7 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [preStart, setPreStart] = useState("New")
 
-  const [volume, setVolume] = useState(0.5)
+  const [volume, setVolume] = useState(0.25)
 
   useEffect(() => {
     if (tracking.count > 0) {
