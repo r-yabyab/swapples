@@ -11,7 +11,7 @@ export default function WebSocketClient () {
       // Create a new STOMP client
       const client = new Client({
         brokerURL: BROKER_URL, // Replace with your WebSocket endpoint
-        // reconnectDelay: 5000,
+        reconnectDelay: 1000,
         onConnect: () => {
           console.log('Connected to WebSocket');
   
