@@ -52,19 +52,27 @@ export default function CountdownTimer({ game }) {
     const progress = (timeLeft / initialTime) * 100;
   
     return (
-      <div>
-        <div className="mb-[10px]">
-          Time left: {(timeLeft / 1000).toFixed(3)} seconds
+        <div>
+
+            <div className=" bg-zinc-600 rounded-lg relative">
+                <div
+                    className="h-[40px] bg-yellow-400 rounded-lg shadow-md shadow-black"
+                    style={{
+                        width: `${progress}%`,
+                    }}
+                />
+                <div className="absolute inset-x-0 bottom-0 h-[15px] bg-gradient-to-t from-amber-500 via-amber-500 to-transparent rounded-b-lg"
+                    style={{
+                        width: `${progress}%`,
+                    }} />
+                <div className="absolute inset-x-0 top-0 h-[5px] bg-gradient-to-b from-amber-100 via-amber-100 to-transparent rounded-b-lg"
+                    style={{
+                        width: `${progress}%`,
+                    }} />
+                <div className=" absolute text-shadow -translate-x-1/2 left-1/2 top-1/2 -translate-y-1/2 text-zinc-100 font-bold inner-shadow text-3xl">
+                    {(timeLeft / 1000).toFixed(1)}
+                </div>
+            </div>
         </div>
-        <div className="w-full bg-[#ccc]">
-          <div
-            style={{
-              width: `${progress}%`,
-              height: '30px',
-              backgroundColor: 'green',
-            }}
-          />
-        </div>
-      </div>
     );
-  }
+}

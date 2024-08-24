@@ -180,12 +180,12 @@ export default function GameBoardComponent() {
         {/* {gameState == 1 ? `Time Left: ${timeLeft} seconds` : 'Game Over'} */}
       </div>
 
-      <div className="relative">
+      <div className=" flex flex-col absolute bg-black -translate-x-1/2 left-1/2">
         <CountdownTimer
           game={game}
           clientRef={clientRef}
-
         />
+        <div>
         <Board
           rows={BoardOptions.BOARD_ROWS}
           cols={BoardOptions.BOARD_COLUMNS}
@@ -194,6 +194,8 @@ export default function GameBoardComponent() {
           gameState={game.gameState}
           volume={volume}
         />
+        </div>
+
         <div className="absolute text-8xl  bg-zinc-200 top-1/2 -translate-y-[50%] 0">
           {preStart === "Ready" && "Ready?"}
           <WebSocketClient
@@ -236,17 +238,17 @@ export default function GameBoardComponent() {
       </div>
 
       {game ? (
-                    <div>
-                        <div className='font-bold'>Websocket Data From Spring Boot:</div>
-                        <div>
-                            <h1>Game State: {game.gameState}</h1>
-                            <p>Timer: {game.timer}</p>
-                            <p>Score: {game.score}</p>
-                        </div>
-                    </div>
-                ) : (
-                    <p>Waiting for game data...</p>
-                )}
+        <div>
+          <div className='font-bold'>Websocket Data From Spring Boot:</div>
+          <div>
+            <h1>Game State: {game.gameState}</h1>
+            <p>Timer: {game.timer}</p>
+            <p>Score: {game.score}</p>
+          </div>
+        </div>
+      ) : (
+        <p>Waiting for game data...</p>
+      )}
 
 
 
