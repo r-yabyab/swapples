@@ -180,12 +180,14 @@ export default function GameBoardComponent() {
         {/* {gameState == 1 ? `Time Left: ${timeLeft} seconds` : 'Game Over'} */}
       </div>
 
-      <div className=" flex flex-col absolute bg-black -translate-x-1/2 left-1/2">
+      <div className=" flex flex-col absolute -translate-x-1/2 left-1/2 bg-white p-3 rounded-lg">
+        <div className="w-[98%] ml-1 mb-1">
         <CountdownTimer
           game={game}
           clientRef={clientRef}
         />
-        <div>
+        </div>
+        <div className="">
         <Board
           rows={BoardOptions.BOARD_ROWS}
           cols={BoardOptions.BOARD_COLUMNS}

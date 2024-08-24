@@ -7,16 +7,18 @@ function App() {
 
   return (
     <>
+      <div className="h-screen w-screen bg-gradient-to-t from-cyan-400 to-teal-400">
 
-    <Routes>
-      {/* <Route path="/" element={<Lobby />} /> */}
-      {/* <Route path="/game" element={<GameBoardComponent />} /> */}
-      <Route path="/" element={<GameBoardComponent />} />
+        <Routes>
+          {/* <Route path="/" element={<Lobby />} /> */}
+          {/* <Route path="/game" element={<GameBoardComponent />} /> */}
+          <Route path="/" element={<GameBoardComponent />} />
 
-    </Routes>
+        </Routes>
+      </div>
     </>
   )
- 
+
 }
 
 export default App;

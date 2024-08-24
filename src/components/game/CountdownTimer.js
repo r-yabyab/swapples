@@ -54,7 +54,7 @@ export default function CountdownTimer({ game }) {
     return (
         <div>
 
-            <div className=" bg-zinc-600 rounded-lg relative">
+            <div className=" bg-zinc-600 rounded-lg relative mb-2">
                 <div
                     className="h-[40px] bg-yellow-400 rounded-lg shadow-md shadow-black"
                     style={{
