@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Client } from '@stomp/stompjs';
 
 const BROKER_URL = 'ws://localhost:8080/gs-guide-websocket'
 
-export default function WebSocketClient ({ game, setGame, startGameState, connectToGame, reConnectToGame }) {
+export default function WebSocketClient ({ game, setGame, clientRef }) {
 
-  const clientRef = useRef(null);
+  // const clientRef = useRef(null);
 
   useEffect(() => {
 
@@ -57,7 +57,8 @@ export default function WebSocketClient ({ game, setGame, startGameState, connec
           body: 'begin'
         })
         console.log("Sent 'begin' msg to websocket")
-        console.log('clientRef:', clientRef.current);
+        console.log('clientRef:', clientRef.current.connected);
+        // console.log('clientRef:', clientRef.current);
       }
 
     }

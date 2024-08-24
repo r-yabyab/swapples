@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Board from "./Board";
 import { BoardOptions } from "../../config/BoardOptions";
 import Volume from "./Volume";
 import WebSocketClient from "./WebSocketClient";
 import { Client } from "@stomp/stompjs";
+import CountdownTimer from "./CountdownTimer";
 
 // 
 const BROKER_URL = 'ws://localhost:8080/gs-guide-websocket'
 
 export default function GameBoardComponent() {
+
+  const clientRef = useRef(null);
 
 
   // const [tracking, setTracking] = useState(null);
@@ -31,7 +34,7 @@ export default function GameBoardComponent() {
   const [startGameState, setStartGameState] = useState(false)
   // const [isGameActive, setIsGameActive] = useState(false)
   const [gameEndTime, setGameEndTime] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(0);
+  // const [timeLeft, setTimeLeft] = useState(0);
   const [preStart, setPreStart] = useState("New")
 
   const [volume, setVolume] = useState(0.25)
@@ -49,26 +52,26 @@ export default function GameBoardComponent() {
     }
   }, [tracking.count]);
 
-  useEffect(() => {
-    if (game.gameState == 1 && gameEndTime) {
-      // Set initial time left
-      setTimeLeft(Math.max(Math.floor((gameEndTime - Date.now()) / 1000), 0));
+  // useEffect(() => {
+  //   if (game.gameState == 1 && gameEndTime) {
+  //     // Set initial time left
+  //     setTimeLeft(Math.max(Math.floor((gameEndTime - Date.now()) / 1000), 0));
 
-      // Update the countdown every second
-      const intervalId = setInterval(() => {
-        const remainingTime = Math.max(Math.floor((gameEndTime - Date.now()) / 1000), 0);
-        setTimeLeft(remainingTime);
+  //     // Update the countdown every second
+  //     const intervalId = setInterval(() => {
+  //       const remainingTime = Math.max(Math.floor((gameEndTime - Date.now()) / 1000), 0);
+  //       setTimeLeft(remainingTime);
 
-        if (remainingTime <= 0) {
-          clearInterval(intervalId);
-          endGame();
-        }
-      }, 1000);
+  //       if (remainingTime <= 0) {
+  //         clearInterval(intervalId);
+  //         endGame();
+  //       }
+  //     }, 1000);
 
-      // Clear interval on component unmount
-      return () => clearInterval(intervalId);
-    }
-  }, [game.gameState, gameEndTime]);
+  //     // Clear interval on component unmount
+  //     return () => clearInterval(intervalId);
+  //   }
+  // }, [game.gameState, gameEndTime]);
 
   const startGame = () => {
     // setPreStart("Ready")
@@ -174,27 +177,33 @@ export default function GameBoardComponent() {
 <div className=" bg-blue-500">App.js</div>
 
       <div>
-        {gameState == 1 ? `Time Left: ${timeLeft} seconds` : 'Game Over'}
+        {/* {gameState == 1 ? `Time Left: ${timeLeft} seconds` : 'Game Over'} */}
       </div>
 
       <div className="relative">
-          <Board
-            rows={BoardOptions.BOARD_ROWS}
-            cols={BoardOptions.BOARD_COLUMNS}
-            setTracking={setTracking}
-            setFruitsMatched={setFruitsMatched}
-            gameState={game.gameState}
-            volume={volume}
-          />
+        <CountdownTimer
+          game={game}
+          clientRef={clientRef}
+
+        />
+        <Board
+          rows={BoardOptions.BOARD_ROWS}
+          cols={BoardOptions.BOARD_COLUMNS}
+          setTracking={setTracking}
+          setFruitsMatched={setFruitsMatched}
+          gameState={game.gameState}
+          volume={volume}
+        />
         <div className="absolute text-8xl  bg-zinc-200 top-1/2 -translate-y-[50%] 0">
           {preStart === "Ready" && "Ready?"}
-          <WebSocketClient 
-        game={game} 
-        setGame={setGame} 
-        startGameState={startGameState} 
-        connectToGame={connectToGame}  
-        reConnectToGame={reConnectToGame}
-      />
+          <WebSocketClient
+            game={game}
+            setGame={setGame}
+            startGameState={startGameState}
+            connectToGame={connectToGame}
+            reConnectToGame={reConnectToGame}
+            clientRef={clientRef}
+          />
           {/* <div onClick={startGame} className="hover:cursor-pointer hover:bg-green-400">{preStart === "New" && "Start game"}</div> */}
           {preStart === "Done" && "Game Over"}
         </div>
