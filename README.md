@@ -1,0 +1,1 @@
+Needs [backend](https://github.com/r-yabyab/swapples-server) running to access game state
