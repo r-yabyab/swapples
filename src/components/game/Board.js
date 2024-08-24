@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Cell from "./Cell";
-import travisYeah from '../audio/yeah.mp3'
-import travisOnemoretime from '../audio/one-more-time.mp3'
+import travisYeah from '../../audio/yeah.mp3'
+import travisOnemoretime from '../../audio/one-more-time.mp3'
 
 
 const getRandomItem = () => items[Math.floor(Math.random() * items.length)];
