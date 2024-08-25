@@ -9,6 +9,8 @@ export default function WebSocketClient ({ game, setGame, clientRef }) {
   const [connectionAttempts, setConnectionAttempts] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
 
+  const [board1, setBoard1] = useState([])
+
   useEffect(() => {
 
     const client = new Client({
@@ -26,12 +28,24 @@ export default function WebSocketClient ({ game, setGame, clientRef }) {
           setGame(receivedGame);
         });
 
-          client.publish({
-            destination: '/app/hello',
-            body: 'rejoin',
-          });
-          console.log("Connected with 'rejoin'")
-        
+        client.publish({
+          destination: '/app/hello',
+          body: 'rejoin',
+        });
+        console.log("Connected with 'rejoin'")
+
+        // Sub to /topic/board for generating board
+        client.subscribe('/topic/board', (message) => {
+          const receivedBoard = JSON.parse(message.body);
+          console.log(receivedBoard)
+          setBoard1(receivedBoard)
+        })
+
+        client.publish({
+          destination: '/app/generateBoard',
+          body: 'generate'
+        })
+
       },
       onStompError: (frame) => {
         console.error('Broker reported error: ' + frame.headers['message']);
@@ -64,8 +78,7 @@ export default function WebSocketClient ({ game, setGame, clientRef }) {
         clientRef.current.publish({
           destination: '/app/hello',
           body: 'begin'
-        })
-        console.log("Sent 'begin' msg to websocket")
+        });
         console.log('clientRef:', clientRef.current.connected);
         // console.log('clientRef:', clientRef.current);
       }

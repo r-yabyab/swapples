@@ -5,7 +5,7 @@ import travisOnemoretime from '../../audio/one-more-time.mp3'
 
 
 const getRandomItem = () => items[Math.floor(Math.random() * items.length)];
-const items = ["🍒", "🍇", "🍉", "🍋", "🍌"]; // Example items
+const items = ["🍒", "🍇", "🍉", "🍋", "🍌", "🍊", "🍍"]; // Example items
 
 const generateInitialBoard = (rows, cols) => {
 

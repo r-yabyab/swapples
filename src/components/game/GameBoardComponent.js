@@ -5,6 +5,8 @@ import Volume from "./Volume";
 import WebSocketClient from "./WebSocketClient";
 import { Client } from "@stomp/stompjs";
 import CountdownTimer from "./CountdownTimer";
+import Score from "./Score";
+import GameHelper from "./GameHelper";
 
 // 
 const BROKER_URL = 'ws://localhost:8080/gs-guide-websocket'
@@ -174,13 +176,15 @@ export default function GameBoardComponent() {
   return (
 <>
 
-<div className=" bg-blue-500">App.js</div>
+{/* <div className=" bg-blue-500">App.js</div> */}
 
       <div>
         {/* {gameState == 1 ? `Time Left: ${timeLeft} seconds` : 'Game Over'} */}
       </div>
 
       <div className=" flex flex-col absolute -translate-x-1/2 left-1/2 bg-white p-3 rounded-lg">
+        <Score fruitsMatched={fruitsMatched} />
+        <GameHelper />
         <div className="w-[98%] ml-1 mb-1">
         <CountdownTimer
           game={game}
