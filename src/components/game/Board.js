@@ -51,7 +51,8 @@ export default function Board (props)  {
             gameState, 
             volume,
             board,
-            setBoard
+            setBoard,
+            clientRef,
     } = props
     
     // const [board, setBoard] = useState(generateInitialBoard(rows, cols))
@@ -66,42 +67,67 @@ export default function Board (props)  {
         audio.play();
     }
 
+    // const handleCellClick = (row, col) => {
+    //     if (gameState == 0 || gameState == 2) return;
+        
+    //     // if specify board[row][col] in setTrackings, they will point to the same fruit for some reason
+    //     // only shows the separate fruits with const item
+    //     const item = board[row][col];
+        
+    //     if (!selectedCell) {
+    //         setSelectedCell({ row, col });
+    //         setTracking(prevState => ({
+    //             initialCell: `Row ${row}, Col ${col} ${item}`,
+    //             count: prevState.count
+    //           }));
+    //     } else {
+    //         if (isAdjacent(selectedCell, { row, col })) {
+    //             swapCells(selectedCell, { row, col });
+    //             const selectedItem = board[selectedCell.row][selectedCell.col];
+    //             setTracking(prevState => ({
+    //                 ...prevState,
+    //                 targetCell: `Selected Cell @ row ${selectedCell.row}, col ${selectedCell.col} (${selectedItem}), Swapped with cell @ row ${row}, col ${col} (${item})\n`,
+    //                 // count: prevState.count + 1
+    //               }));
+    //             // setSelectedCell(null);
+    //             // setTracking(null)
+    //         } else {
+    //             console.log('cells are not adjacent')
+    //             setTracking(prevState => ({
+    //                 ...prevState,
+    //                 targetCell: <span className=" text-red-600">Not adjacent!</span>,
+    //                 count: prevState.count
+    //             }))
+    //         }
+    //         setSelectedCell(null);
+
+    //     }
+    // }
+
     const handleCellClick = (row, col) => {
-        if (gameState == 0 || gameState == 2) return;
-        
-        // if specify board[row][col] in setTrackings, they will point to the same fruit for some reason
-        // only shows the separate fruits with const item
-        const item = board[row][col];
-        
+        if (gameState === 0 || gameState === 2) return;
+    
         if (!selectedCell) {
             setSelectedCell({ row, col });
             setTracking(prevState => ({
-                initialCell: `Row ${row}, Col ${col} ${item}`,
+                initialCell: `Row ${row}, Col ${col}`,
                 count: prevState.count
-              }));
+            }));
         } else {
             if (isAdjacent(selectedCell, { row, col })) {
+                sendMove(selectedCell, { row, col }); // Send move to backend
                 swapCells(selectedCell, { row, col });
-                const selectedItem = board[selectedCell.row][selectedCell.col];
-                setTracking(prevState => ({
-                    ...prevState,
-                    targetCell: `Selected Cell @ row ${selectedCell.row}, col ${selectedCell.col} (${selectedItem}), Swapped with cell @ row ${row}, col ${col} (${item})\n`,
-                    // count: prevState.count + 1
-                  }));
-                // setSelectedCell(null);
-                // setTracking(null)
             } else {
-                console.log('cells are not adjacent')
+                console.log('cells are not adjacent');
                 setTracking(prevState => ({
                     ...prevState,
-                    targetCell: <span className=" text-red-600">Not adjacent!</span>,
+                    targetCell: <span className="text-red-600">Not adjacent!</span>,
                     count: prevState.count
-                }))
+                }));
             }
             setSelectedCell(null);
-
         }
-    }
+    };
 
     const isAdjacent = (cell1, cell2) => {
         const rowDiff = Math.abs(cell1.row - cell2.row);
@@ -264,11 +290,26 @@ export default function Board (props)  {
         }
     };
 
+    //ws
+    const sendMove = (source, target) => {
+        const move = {
+            sourceRow: source.row,
+            sourceCol: source.col,
+            targetRow: target.row,
+            targetCol: target.col
+        };
+        
+        clientRef.current.publish({
+            destination: '/app/makeMove',
+            body: JSON.stringify(move)
+        });
+    };
+
     return (
         <>
 
             <div className="board flex-col select-none ">
-                {board.length > 0 && board.map((row, rowIndex) => (
+                {board.map((row, rowIndex) => (
                     <div key={rowIndex} className="row flex">
                         {row.map((item, colIndex) => (
                             <Cell

@@ -202,6 +202,7 @@ export default function GameBoardComponent() {
           volume={volume}
           board={board}
           setBoard={setBoard}
+          clientRef={clientRef}
         />
         </div>
 
