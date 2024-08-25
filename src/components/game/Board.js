@@ -41,8 +41,20 @@ const generateInitialBoard = (rows, cols) => {
     return board;
 };
 
-export default function Board ({ rows, cols, setTracking, setFruitsMatched, gameState, volume })  {
-    const [board, setBoard] = useState(generateInitialBoard(rows, cols))
+export default function Board (props)  {
+    
+    const {
+            rows, 
+            cols, 
+            setTracking, 
+            setFruitsMatched, 
+            gameState, 
+            volume,
+            board,
+            setBoard
+    } = props
+    
+    // const [board, setBoard] = useState(generateInitialBoard(rows, cols))
     const [selectedCell, setSelectedCell] = useState(null); // first clicked cell
     const [highlightedCells, setHighlightedCells] = useState([])
 
@@ -256,7 +268,7 @@ export default function Board ({ rows, cols, setTracking, setFruitsMatched, game
         <>
 
             <div className="board flex-col select-none ">
-                {board.map((row, rowIndex) => (
+                {board.length > 0 && board.map((row, rowIndex) => (
                     <div key={rowIndex} className="row flex">
                         {row.map((item, colIndex) => (
                             <Cell

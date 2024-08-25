@@ -3,13 +3,13 @@ import { Client } from '@stomp/stompjs';
 
 const BROKER_URL = 'ws://localhost:8080/gs-guide-websocket'
 
-export default function WebSocketClient ({ game, setGame, clientRef }) {
+export default function WebSocketClient ({ game, setGame, clientRef, board, setBoard }) {
 
   // const clientRef = useRef(null);
   const [connectionAttempts, setConnectionAttempts] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
 
-  const [board1, setBoard1] = useState([])
+  // const [board1, setBoard1] = useState([])
 
   useEffect(() => {
 
@@ -38,7 +38,7 @@ export default function WebSocketClient ({ game, setGame, clientRef }) {
         client.subscribe('/topic/board', (message) => {
           const receivedBoard = JSON.parse(message.body);
           console.log(receivedBoard)
-          setBoard1(receivedBoard)
+          setBoard(receivedBoard.board)
         })
 
         client.publish({
@@ -79,6 +79,10 @@ export default function WebSocketClient ({ game, setGame, clientRef }) {
           destination: '/app/hello',
           body: 'begin'
         });
+        clientRef.current.publish({
+          destination: '/app/generateBoard',
+          body: 'generate'
+        })
         console.log('clientRef:', clientRef.current.connected);
         // console.log('clientRef:', clientRef.current);
       }

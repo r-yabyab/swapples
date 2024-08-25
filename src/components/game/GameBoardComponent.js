@@ -15,6 +15,7 @@ export default function GameBoardComponent() {
 
   const clientRef = useRef(null);
 
+  const [board, setBoard] = useState([])
 
   // const [tracking, setTracking] = useState(null);
   const [tracking, setTracking] = useState({
@@ -199,6 +200,8 @@ export default function GameBoardComponent() {
           setFruitsMatched={setFruitsMatched}
           gameState={game.gameState}
           volume={volume}
+          board={board}
+          setBoard={setBoard}
         />
         </div>
 
@@ -211,6 +214,8 @@ export default function GameBoardComponent() {
             connectToGame={connectToGame}
             reConnectToGame={reConnectToGame}
             clientRef={clientRef}
+            board={board}
+            setBoard={setBoard}
           />
           {/* <div onClick={startGame} className="hover:cursor-pointer hover:bg-green-400">{preStart === "New" && "Start game"}</div> */}
           {preStart === "Done" && "Game Over"}
