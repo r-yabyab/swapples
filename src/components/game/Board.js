@@ -7,39 +7,39 @@ import travisOnemoretime from '../../audio/one-more-time.mp3'
 const getRandomItem = () => items[Math.floor(Math.random() * items.length)];
 const items = ["🍒", "🍇", "🍉", "🍋", "🍌", "🍊", "🍍"]; // Example items
 
-const generateInitialBoard = (rows, cols) => {
+// const generateInitialBoard = (rows, cols) => {
 
-    const board = Array.from({ length: rows }, () => Array(cols).fill(null));
+//     const board = Array.from({ length: rows }, () => Array(cols).fill(null));
 
 
-    const isMatch = (board, row, col) => {
-        const item = board[row][col];
+//     const isMatch = (board, row, col) => {
+//         const item = board[row][col];
 
-        // Check horizontal match (2 to the left of the current cell)
-        if (col >= 2 && board[row][col - 1] === item && board[row][col - 2] === item) {
-            return true;
-        }
+//         // Check horizontal match (2 to the left of the current cell)
+//         if (col >= 2 && board[row][col - 1] === item && board[row][col - 2] === item) {
+//             return true;
+//         }
 
-        // Check vertical match (2 above the current cell)
-        if (row >= 2 && board[row - 1][col] === item && board[row - 2][col] === item) {
-            return true;
-        }
+//         // Check vertical match (2 above the current cell)
+//         if (row >= 2 && board[row - 1][col] === item && board[row - 2][col] === item) {
+//             return true;
+//         }
 
-        return false;
-    };
+//         return false;
+//     };
 
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            let item;
-            do {
-                item = getRandomItem();
-                board[row][col] = item;
-            } while (isMatch(board, row, col));
-        }
-    }
+//     for (let row = 0; row < rows; row++) {
+//         for (let col = 0; col < cols; col++) {
+//             let item;
+//             do {
+//                 item = getRandomItem();
+//                 board[row][col] = item;
+//             } while (isMatch(board, row, col));
+//         }
+//     }
 
-    return board;
-};
+//     return board;
+// };
 
 export default function Board (props)  {
     
@@ -292,18 +292,61 @@ export default function Board (props)  {
 
     //ws
     const sendMove = (source, target) => {
-        const move = {
-            sourceRow: source.row,
-            sourceCol: source.col,
-            targetRow: target.row,
-            targetCol: target.col
-        };
-        
-        clientRef.current.publish({
-            destination: '/app/makeMove',
-            body: JSON.stringify(move)
-        });
+        if (checkForMatch) {
+            const move = {
+                sourceRow: source.row,
+                sourceCol: source.col,
+                targetRow: target.row,
+                targetCol: target.col
+            };
+            
+            clientRef.current.publish({
+                destination: '/app/makeMove',
+                body: JSON.stringify(move)
+            });
+        } else {
+            console.log("No match, not sending to server")
+        }
+
     };
+
+    // const sendMove = (source, target) => {
+    //     const newBoard = board.map(row => [...row]);
+    //     const temp = newBoard[source.row][source.col];
+    //     newBoard[source.row][source.col] = newBoard[target.row][target.col];
+    //     newBoard[target.row][target.col] = temp;
+    
+    //     // Check for matches after swapping
+    //     const matchedCells = checkForMatch(newBoard, source.row, source.col) || checkForMatch(newBoard, target.row, target.col);
+    
+    //     if (matchedCells) {
+    //         const move = {
+    //             sourceRow: source.row,
+    //             sourceCol: source.col,
+    //             targetRow: target.row,
+    //             targetCol: target.col
+    //         };
+    
+    //         clientRef.current.publish({
+    //             destination: '/app/makeMove',
+    //             body: JSON.stringify(move)
+    //         });
+    
+    //         // setTracking(prevState => ({
+    //         //     ...prevState,
+    //         //     count: prevState.count + 1
+    //         // }));
+    //     } else {
+    //         console.log("No match, not sending to server");
+    //         // Optionally, you could swap back here if there's no match.
+    //         // newBoard[target.row][target.col] = newBoard[source.row][source.col];
+    //         // newBoard[source.row][source.col] = temp;
+    //         // Optional: Revert the swap visually if needed
+    //     swapCells(source, target);  // If the swap was done in `swapCells`, revert it here
+    //     }
+    
+    //     setBoard(newBoard);
+    // };
 
     return (
         <>
